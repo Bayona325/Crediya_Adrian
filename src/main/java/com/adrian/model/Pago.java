@@ -4,19 +4,34 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Pago implements Serializable {
+
     private Integer id;
     private Integer prestamoId;
     private LocalDate fechaPago;
     private Double monto;
 
+    // Constructor vacío (necesario para algunas operaciones)
     public Pago() {}
 
+    // 🔥 Constructor que tu Main y tu DAO necesitan
+    public Pago(Integer id, Integer prestamoId, Double monto) {
+        this.id = id;
+        this.prestamoId = prestamoId;
+        this.monto = monto;
+        this.fechaPago = LocalDate.now();  // fecha automática
+    }
+
+    // Constructor completo (por compatibilidad y futuras ampliaciones)
     public Pago(Integer id, Integer prestamoId, LocalDate fechaPago, Double monto) {
         this.id = id;
         this.prestamoId = prestamoId;
-        this.fechaPago = LocalDate.now();
         this.monto = monto;
+
+        // Si viene null desde archivo o constructor → hoy
+        this.fechaPago = (fechaPago != null) ? fechaPago : LocalDate.now();
     }
+
+    // ---------- GETTERS & SETTERS ----------
 
     public Integer getId() {
         return id;
@@ -52,6 +67,9 @@ public class Pago implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Pago[id=%d, prestamoId=%d, fecha=%s, monto=%.2f]", id, prestamoId, fechaPago.toString(), monto);
+        return String.format(
+            "Pago[id=%d, prestamoId=%d, fecha=%s, monto=%.2f]",
+            id, prestamoId, fechaPago, monto
+        );
     }
 }

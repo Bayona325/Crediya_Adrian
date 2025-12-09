@@ -8,14 +8,19 @@ import com.adrian.dao.PagoFileDao;
 import com.adrian.dao.PrestamoFileDao;
 import com.adrian.model.Cliente;
 import com.adrian.model.Empleado;
-import com.adrian.model.EstadoPrestamo;
 import com.adrian.model.Pago;
 import com.adrian.model.Prestamo;
+import com.adrian.model.EstadoPrestamo;
+import com.adrian.util.Validator;
 
 public class Main {
+
     private static final String DATA_DIR = "data";
+
     public static void main(String[] args) throws Exception {
+
         new java.io.File(DATA_DIR).mkdirs();
+
         EmpleadoFileDao edao = new EmpleadoFileDao(DATA_DIR + "/empleados.txt");
         ClienteFileDao cdao = new ClienteFileDao(DATA_DIR + "/clientes.txt");
         PrestamoFileDao pdao = new PrestamoFileDao(DATA_DIR + "/prestamos.txt", cdao, edao);
@@ -35,78 +40,177 @@ public class Main {
                         8) Ver reportes (préstamos pendientes)
                         0) Salir
                         """);
+
                 System.out.print("\nOpción: ");
                 String opt = sc.nextLine();
+
                 switch (opt) {
+
                     case "1": {
-                        System.out.print("Nombre: "); String nombre = sc.nextLine();
-                        System.out.print("Documento: "); String doc = sc.nextLine();
-                        System.out.print("Rol: "); String rol = sc.nextLine();
-                        System.out.print("Correo: "); String correo = sc.nextLine();
-                        System.out.print("Salario: "); Double salario = Double.valueOf(sc.nextLine());
+                        // Registrar empleado
+                        String nombre;
+                        do {
+                            System.out.print("Nombre: ");
+                            nombre = sc.nextLine();
+                            if (!Validator.nombreValido(nombre))
+                                System.out.println("❌ Nombre inválido.");
+                        } while (!Validator.nombreValido(nombre));
+
+                        String doc;
+                        do {
+                            System.out.print("Documento: ");
+                            doc = sc.nextLine();
+                            if (!Validator.documentoValido(doc))
+                                System.out.println("❌ Documento inválido (solo números).");
+                        } while (!Validator.documentoValido(doc));
+
+                        System.out.print("Rol: ");
+                        String rol = sc.nextLine();
+
+                        String correo;
+                        do {
+                            System.out.print("Correo: ");
+                            correo = sc.nextLine();
+                            if (!Validator.correoValido(correo))
+                                System.out.println("❌ Correo inválido.");
+                        } while (!Validator.correoValido(correo));
+
+                        Double salario;
+                        while (true) {
+                            System.out.print("Salario: ");
+                            try {
+                                salario = Double.valueOf(sc.nextLine());
+                                if (Validator.numeroPositivo(salario)) break;
+                            } catch (Exception e) {}
+                            System.out.println("❌ Salario inválido.");
+                        }
+
                         Empleado e = new Empleado(null, nombre, doc, rol, correo, salario);
                         edao.guardar(e);
+
                         System.out.println("Empleado guardado: " + e);
                         break;
                     }
+
                     case "2": {
-                        var list = edao.listar();
-                        list.forEach(System.out::println);
+                        edao.listar().forEach(System.out::println);
                         break;
                     }
+
                     case "3": {
-                        System.out.print("Nombre cliente: "); String n = sc.nextLine();
-                        System.out.print("Documento: "); String d = sc.nextLine();
-                        System.out.print("Correo: "); String co = sc.nextLine();
-                        System.out.print("Telefono: "); String t = sc.nextLine();
-                        Cliente c = new Cliente(null, n, d, co, t);
+                        // Registrar cliente
+                        String nombre;
+                        do {
+                            System.out.print("Nombre cliente: ");
+                            nombre = sc.nextLine();
+                            if (!Validator.nombreValido(nombre))
+                                System.out.println("❌ Nombre inválido.");
+                        } while (!Validator.nombreValido(nombre));
+
+                        String doc;
+                        do {
+                            System.out.print("Documento: ");
+                            doc = sc.nextLine();
+                            if (!Validator.documentoValido(doc))
+                                System.out.println("❌ Documento inválido.");
+                        } while (!Validator.documentoValido(doc));
+
+                        String correo;
+                        do {
+                            System.out.print("Correo: ");
+                            correo = sc.nextLine();
+                            if (!Validator.correoValido(correo))
+                                System.out.println("❌ Correo inválido.");
+                        } while (!Validator.correoValido(correo));
+
+                        String tel;
+                        do {
+                            System.out.print("Telefono: ");
+                            tel = sc.nextLine();
+                            if (!Validator.telefonoValido(tel))
+                                System.out.println("❌ Teléfono inválido (solo números, 7-15 dígitos).");
+                        } while (!Validator.telefonoValido(tel));
+
+                        Cliente c = new Cliente(null, nombre, doc, correo, tel);
                         cdao.guardar(c);
+
                         System.out.println("Cliente guardado: " + c);
                         break;
                     }
+
                     case "4": {
                         cdao.listar().forEach(System.out::println);
                         break;
                     }
+
                     case "5": {
-                        System.out.print("ID cliente: "); Integer cid = Integer.valueOf(sc.nextLine());
-                        System.out.print("ID empleado: "); Integer eid = Integer.valueOf(sc.nextLine());
-                        System.out.print("Monto: "); Double monto = Double.valueOf(sc.nextLine());
-                        System.out.print("Interes (porcentaje): "); Double interes = Double.valueOf(sc.nextLine());
-                        System.out.print("Cuotas: "); Integer cuotas = Integer.valueOf(sc.nextLine());
-                        var clientes = cdao.listar();
-                        var empleados = edao.listar();
-                        Cliente cliente = clientes.stream().filter(x->x.getId().equals(cid)).findFirst().orElse(null);
-                        Empleado empleado = empleados.stream().filter(x->x.getId().equals(eid)).findFirst().orElse(null);
-                        if (cliente==null || empleado==null) { System.out.println("Cliente o empleado no encontrado"); break; }
+                        // Registrar préstamo
+                        Integer cid, eid;
+                        Double monto, interes;
+                        Integer cuotas;
+
+                        System.out.print("ID cliente: ");
+                        cid = Integer.valueOf(sc.nextLine());
+
+                        System.out.print("ID empleado: ");
+                        eid = Integer.valueOf(sc.nextLine());
+
+                        System.out.print("Monto: ");
+                        monto = Double.valueOf(sc.nextLine());
+
+                        System.out.print("Interes (%): ");
+                        interes = Double.valueOf(sc.nextLine());
+
+                        System.out.print("Cuotas: ");
+                        cuotas = Integer.valueOf(sc.nextLine());
+
+                        var cliente = cdao.listar().stream().filter(x -> x.getId().equals(cid)).findFirst().orElse(null);
+                        var empleado = edao.listar().stream().filter(x -> x.getId().equals(eid)).findFirst().orElse(null);
+
+                        if (cliente == null || empleado == null) {
+                            System.out.println("❌ Cliente o empleado no encontrado.");
+                            break;
+                        }
+
                         Prestamo p = new Prestamo(null, cliente, empleado, monto, interes, cuotas);
                         pdao.guardar(p);
+
                         System.out.println("Préstamo guardado: " + p);
                         break;
                     }
+
                     case "6": {
                         pdao.listar().forEach(System.out::println);
                         break;
                     }
+
                     case "7": {
-                        System.out.print("ID préstamo: "); Integer pid = Integer.valueOf(sc.nextLine());
-                        System.out.print("Monto pago: "); Double montoPago = Double.valueOf(sc.nextLine());
-                        Pago pago = new Pago();
-                        pago.setPrestamoId(pid);
-                        pago.setMonto(montoPago);
+                        System.out.print("ID préstamo: "); 
+                        Integer pid = Integer.valueOf(sc.nextLine());
+
+                        System.out.print("Monto pago: ");
+                        Double montoPago = Double.valueOf(sc.nextLine());
+
+                        Pago pago = new Pago(null, pid, montoPago);
                         pagoDao.guardar(pago);
+
                         System.out.println("Pago registrado: " + pago);
                         break;
                     }
+
                     case "8": {
-                        pdao.listar().stream().filter(p -> (EstadoPrestamo.PENDIENTE).equals(p.getEstado())).forEach(System.out::println);
+                        pdao.listar().stream()
+                            .filter(p -> EstadoPrestamo.PENDIENTE.equals(p.getEstado()))
+                            .forEach(System.out::println);
                         break;
                     }
-                    case "0": {
+
+                    case "0":
                         System.exit(0);
-                    }
+                        break;
+
                     default:
-                        System.out.println("Opción inválida");
+                        System.out.println("❌ Opción inválida.");
                 }
             }
         }
