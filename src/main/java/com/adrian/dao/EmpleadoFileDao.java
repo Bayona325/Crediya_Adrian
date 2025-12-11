@@ -24,7 +24,7 @@ public class EmpleadoFileDao implements GenericDao<Empleado> {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\t");
                 if (parts.length<6) continue;
-                Empleado e = new Empleado(Integer.valueOf(parts[0]), parts[1], parts[2], parts[3], parts[4], Double.valueOf(parts[5]));
+                Empleado e = new Empleado(Integer.valueOf(parts[0]), parts[1], parts[2], parts[3], parts[4], Double.parseDouble(parts[5]));
                 res.add(e);
             }
         }
@@ -37,7 +37,7 @@ public class EmpleadoFileDao implements GenericDao<Empleado> {
         for (Empleado ex: all) if (ex.getId()!=null && ex.getId()>=nextId) nextId = ex.getId()+1;
         e.setId(nextId);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
-            bw.write(String.join("\t", String.valueOf(e.getId()), e.getNombre(), e.getDocumento(), e.getRol(), e.getCorreo(), String.format("%.2f", e.getSalario())));
+            bw.write(String.join("\t", String.valueOf(e.getId()), e.getNombre(), e.getDocumento(), e.getRol(), e.getCorreo(), String.valueOf(e.getSalario())));
             bw.newLine();
         }
     }
