@@ -45,8 +45,8 @@ public class PrestamoFileDao implements GenericDao<Prestamo> {
                 Integer id = Integer.valueOf(p[0]);
                 Integer clienteId = Integer.valueOf(p[1]);
                 Integer empleadoId = Integer.valueOf(p[2]);
-                Double monto = Double.valueOf(p[3]);
-                Double interes = Double.valueOf(p[4]);
+                Double monto = Double.parseDouble(p[3]);
+                Double interes = Double.parseDouble(p[4]);
                 Integer cuotas = Integer.valueOf(p[5]);
                 LocalDate fecha = LocalDate.parse(p[6]);
                 Prestamo pre = new Prestamo(id, clientes.get(clienteId), empleados.get(empleadoId), monto, interes, cuotas);
@@ -64,7 +64,7 @@ public class PrestamoFileDao implements GenericDao<Prestamo> {
         for (var ex: listar()) if (ex.getId()!=null && ex.getId()>=nextId) nextId = ex.getId()+1;
         p.setId(nextId);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
-            bw.write(String.join("\t", String.valueOf(p.getId()), String.valueOf(p.getCliente().getId()), String.valueOf(p.getEmpleado().getId()), String.format("%.2f", p.getMonto()), String.format("%.2f", p.getInteres()), String.valueOf(p.getCuotas()), p.getFechaInicio().toString(), p.getEstado().toString()));
+            bw.write(String.join("\t", String.valueOf(p.getId()), String.valueOf(p.getCliente().getId()), String.valueOf(p.getEmpleado().getId()), String.valueOf(p.getMonto()), String.valueOf(p.getInteres()), String.valueOf(p.getCuotas()), p.getFechaInicio().toString(), p.getEstado().toString()));
             bw.newLine();
         }
     }
