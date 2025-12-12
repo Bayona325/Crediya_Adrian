@@ -29,7 +29,7 @@ public class PagoFileDao implements GenericDao<Pago> {
                 pago.setId(Integer.valueOf(p[0]));
                 pago.setPrestamoId(Integer.valueOf(p[1]));
                 pago.setFechaPago(LocalDate.parse(p[2]));
-                pago.setMonto(Double.valueOf(p[3]));
+                pago.setMonto(Double.parseDouble(p[3]));
                 res.add(pago);
             }
         }
@@ -41,7 +41,7 @@ public class PagoFileDao implements GenericDao<Pago> {
         for (var ex: listar()) if (ex.getId()!=null && ex.getId()>=nextId) nextId = ex.getId()+1;
         p.setId(nextId);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
-            bw.write(String.join("\t", String.valueOf(p.getId()), String.valueOf(p.getPrestamoId()), p.getFechaPago().toString(), String.format("%.2f", p.getMonto())));
+            bw.write(String.join("\t", String.valueOf(p.getId()), String.valueOf(p.getPrestamoId()), p.getFechaPago().toString(), String.valueOf(p.getMonto())));
             bw.newLine();
         }
     }
