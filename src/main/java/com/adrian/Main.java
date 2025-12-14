@@ -47,7 +47,6 @@ public class Main {
                 switch (opt) {
 
                     case "1": {
-                        // Registrar empleado
                         String nombre;
                         do {
                             System.out.print("Nombre: ");
@@ -98,7 +97,6 @@ public class Main {
                     }
 
                     case "3": {
-                        // Registrar cliente
                         String nombre;
                         do {
                             System.out.print("Nombre cliente: ");
@@ -144,7 +142,6 @@ public class Main {
                     }
 
                     case "5": {
-                        // Registrar préstamo
                         Integer cid, eid;
                         Double monto, interes;
                         Integer cuotas;
@@ -164,8 +161,10 @@ public class Main {
                         System.out.print("Cuotas: ");
                         cuotas = Integer.valueOf(sc.nextLine());
 
-                        var cliente = cdao.listar().stream().filter(x -> x.getId().equals(cid)).findFirst().orElse(null);
-                        var empleado = edao.listar().stream().filter(x -> x.getId().equals(eid)).findFirst().orElse(null);
+                        var cliente = cdao.listar().stream()
+                                .filter(x -> x.getId().equals(cid)).findFirst().orElse(null);
+                        var empleado = edao.listar().stream()
+                                .filter(x -> x.getId().equals(eid)).findFirst().orElse(null);
 
                         if (cliente == null || empleado == null) {
                             System.out.println("❌ Cliente o empleado no encontrado.");
@@ -184,17 +183,33 @@ public class Main {
                         break;
                     }
 
+                    // 🔥🔥🔥 CASE 7 CORREGIDO 🔥🔥🔥
                     case "7": {
-                        System.out.print("ID préstamo: "); 
+                        System.out.print("ID préstamo: ");
                         Integer pid = Integer.valueOf(sc.nextLine());
 
                         System.out.print("Monto pago: ");
                         Double montoPago = Double.valueOf(sc.nextLine());
 
+                        // 1️⃣ Buscar préstamo
+                        Prestamo prestamo = pdao.buscarPorId(pid);
+                        if (prestamo == null) {
+                            System.out.println("❌ Préstamo no encontrado.");
+                            break;
+                        }
+
+                        // 2️⃣ Aplicar pago (afecta saldo, cuotas y estado)
+                        prestamo.aplicarPago(montoPago);
+
+                        // 3️⃣ Actualizar préstamo en archivo
+                        pdao.actualizar(prestamo);
+
+                        // 4️⃣ Registrar pago
                         Pago pago = new Pago(null, pid, montoPago);
                         pagoDao.guardar(pago);
 
-                        System.out.println("Pago registrado: " + pago);
+                        System.out.println("✅ Pago aplicado correctamente.");
+                        System.out.println(prestamo);
                         break;
                     }
 
