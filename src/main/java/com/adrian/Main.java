@@ -183,7 +183,6 @@ public class Main {
                         break;
                     }
 
-                    // 🔥🔥🔥 CASE 7 CORREGIDO 🔥🔥🔥
                     case "7": {
                         System.out.print("ID préstamo: ");
                         Integer pid = Integer.valueOf(sc.nextLine());

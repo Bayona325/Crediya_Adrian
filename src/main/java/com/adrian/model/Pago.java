@@ -10,18 +10,15 @@ public class Pago implements Serializable {
     private LocalDate fechaPago;
     private Double monto;
 
-    // Constructor vacío (necesario para algunas operaciones)
     public Pago() {}
 
-    // 🔥 Constructor que tu Main y tu DAO necesitan
     public Pago(Integer id, Integer prestamoId, Double monto) {
         this.id = id;
         this.prestamoId = prestamoId;
         this.monto = monto;
-        this.fechaPago = LocalDate.now();  // fecha automática
+        this.fechaPago = LocalDate.now();
     }
 
-    // Constructor completo (por compatibilidad y futuras ampliaciones)
     public Pago(Integer id, Integer prestamoId, LocalDate fechaPago, Double monto) {
         this.id = id;
         this.prestamoId = prestamoId;
@@ -30,8 +27,6 @@ public class Pago implements Serializable {
         // Si viene null desde archivo o constructor → hoy
         this.fechaPago = (fechaPago != null) ? fechaPago : LocalDate.now();
     }
-
-    // ---------- GETTERS & SETTERS ----------
 
     public Integer getId() {
         return id;

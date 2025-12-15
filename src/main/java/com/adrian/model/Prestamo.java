@@ -15,10 +15,11 @@ public class Prestamo {
     private LocalDate fechaInicio;
     private EstadoPrestamo estado;
 
-    public Prestamo() {}
+    public Prestamo() {
+    }
 
     public Prestamo(Integer id, Cliente cliente, Empleado empleado,
-                    Double monto, Double interes, Integer cuotas) {
+            Double monto, Double interes, Integer cuotas) {
         this.id = id;
         this.cliente = cliente;
         this.empleado = empleado;
@@ -31,9 +32,9 @@ public class Prestamo {
         this.estado = EstadoPrestamo.PENDIENTE;
     }
 
-    // 🔥 LÓGICA CLAVE
     public void aplicarPago(Double montoPago) {
-        if (estado == EstadoPrestamo.PAGADO) return;
+        if (estado == EstadoPrestamo.PAGADO)
+            return;
 
         saldoPendiente -= montoPago;
         cuotasPagadas++;
@@ -44,17 +45,45 @@ public class Prestamo {
         }
     }
 
-    // Getters y setters
-    public Integer getId() { return id; }
-    public Cliente getCliente() { return cliente; }
-    public Empleado getEmpleado() { return empleado; }
-    public Double getMonto() { return monto; }
-    public Double getInteres() { return interes; }
-    public Integer getCuotas() { return cuotas; }
-    public Integer getCuotasPagadas() { return cuotasPagadas; }
-    public Double getSaldoPendiente() { return saldoPendiente; }
-    public LocalDate getFechaInicio() { return fechaInicio; }
-    public EstadoPrestamo getEstado() { return estado; }
+    public Integer getId() {
+        return id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public Double getMonto() {
+        return monto;
+    }
+
+    public Double getInteres() {
+        return interes;
+    }
+
+    public Integer getCuotas() {
+        return cuotas;
+    }
+
+    public Integer getCuotasPagadas() {
+        return cuotasPagadas;
+    }
+
+    public Double getSaldoPendiente() {
+        return saldoPendiente;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public EstadoPrestamo getEstado() {
+        return estado;
+    }
 
     @Override
     public String toString() {
