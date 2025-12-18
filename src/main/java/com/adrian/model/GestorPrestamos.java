@@ -30,7 +30,7 @@ public class GestorPrestamos {
         this.cuotasPagadas = 0;
         this.saldoPendiente = monto + (monto * interes / 100);
         this.fechaInicio = LocalDate.now();
-        this.fechaLimite = fechaInicio + LocalDate.;
+        this.fechaLimite = LocalDate.now();
         this.estado = EstadoPrestamo.PENDIENTE;
     }
 

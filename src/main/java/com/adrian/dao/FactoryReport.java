@@ -12,9 +12,10 @@ import java.util.List;
 import com.adrian.model.Cliente;
 import com.adrian.model.Empleado;
 import com.adrian.model.EstadoPrestamo;
+import com.adrian.model.GestorPrestamos;
 import com.adrian.model.Prestamo;
 
-public class FactoryReport implements GenericDao<Prestamo> {
+public class FactoryReport implements GenericDao<GestorPrestamos> {
     private File file;
     private ClienteFileDao clienteDao;
     private EmpleadoFileDao empleadoDao;
