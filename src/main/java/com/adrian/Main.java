@@ -6,17 +6,23 @@ import com.adrian.dao_jdbc.ClienteJdbcDao;
 import com.adrian.dao_jdbc.EmpleadoJdbcDao;
 import com.adrian.dao_jdbc.PagoJdbcDao;
 import com.adrian.dao_jdbc.PrestamoJdbcDao;
+import com.adrian.datasource.DbClienteDatasource;
+import com.adrian.datasource.LocalClienteDatasource;
 import com.adrian.model.Cliente;
 import com.adrian.model.Empleado;
 import com.adrian.model.EstadoPrestamo;
 import com.adrian.model.Pago;
 import com.adrian.model.Prestamo;
+import com.adrian.repostory.ClienteRepository;
+import com.adrian.repostory.ClienteRepositoryImpl;
 import com.adrian.util.Validator;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-
+        
+        ClienteRepository repo = new ClienteRepositoryImpl(new LocalClienteDatasource("/"), new DbClienteDatasource());
+        repo.guardar(null);
         ClienteJdbcDao cdao = new ClienteJdbcDao();
         EmpleadoJdbcDao edao = new EmpleadoJdbcDao();
         PrestamoJdbcDao pdao = new PrestamoJdbcDao();
