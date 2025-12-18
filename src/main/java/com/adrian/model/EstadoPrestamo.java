@@ -2,5 +2,7 @@ package com.adrian.model;
 
 public enum EstadoPrestamo {
     PENDIENTE,
-    PAGADO
+    PAGADO,
+    CANCELADO,
+    VENCIDO
 }
